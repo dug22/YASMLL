@@ -1,4 +1,4 @@
-package io.github.dug22.yasml.data;
+package io.github.dug22.yasmll.data;
 
 import java.util.ArrayList;
 import java.util.Collections;

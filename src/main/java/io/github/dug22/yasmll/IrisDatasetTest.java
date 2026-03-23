@@ -1,11 +1,11 @@
-package io.github.dug22.yasml;
+package io.github.dug22.yasmll;
 
 import io.github.dug22.carpentry.DataFrame;
 import io.github.dug22.carpentry.column.impl.IntegerColumn;
-import io.github.dug22.yasml.classifier.KNNClassifier;
-import io.github.dug22.yasml.classifier.NaiveBayes;
-import io.github.dug22.yasml.data.Dataset;
-import io.github.dug22.yasml.metric.Accuracy;
+import io.github.dug22.yasmll.classifier.KNNClassifier;
+import io.github.dug22.yasmll.classifier.NaiveBayes;
+import io.github.dug22.yasmll.data.Dataset;
+import io.github.dug22.yasmll.metric.Accuracy;
 
 import java.util.List;
 

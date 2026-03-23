@@ -1,6 +1,6 @@
-package io.github.dug22.yasml.metric;
+package io.github.dug22.yasmll.metric;
 
-import io.github.dug22.yasml.data.DataPoint;
+import io.github.dug22.yasmll.data.DataPoint;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

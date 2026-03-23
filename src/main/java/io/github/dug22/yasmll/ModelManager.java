@@ -1,6 +1,6 @@
-package io.github.dug22.yasml;
+package io.github.dug22.yasmll;
 
-import io.github.dug22.yasml.classifier.IClassifier;
+import io.github.dug22.yasmll.classifier.IClassifier;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

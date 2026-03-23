@@ -1,8 +1,7 @@
-package io.github.dug22.yasml.classifier;
+package io.github.dug22.yasmll.classifier;
 
-import io.github.dug22.yasml.data.DataPoint;
-import io.github.dug22.yasml.data.Dataset;
-import io.github.dug22.yasml.metric.Accuracy;
+import io.github.dug22.yasmll.data.DataPoint;
+import io.github.dug22.yasmll.data.Dataset;
 
 import java.io.Serializable;
 import java.util.*;

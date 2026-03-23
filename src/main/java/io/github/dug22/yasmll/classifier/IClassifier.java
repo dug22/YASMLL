@@ -1,6 +1,6 @@
-package io.github.dug22.yasml.classifier;
+package io.github.dug22.yasmll.classifier;
 
-import io.github.dug22.yasml.data.Dataset;
+import io.github.dug22.yasmll.data.Dataset;
 
 import java.util.List;
 

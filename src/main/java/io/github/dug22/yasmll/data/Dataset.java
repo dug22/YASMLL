@@ -1,4 +1,4 @@
-package io.github.dug22.yasml.data;
+package io.github.dug22.yasmll.data;
 
 import io.github.dug22.carpentry.DataFrame;
 import io.github.dug22.carpentry.column.Column;
