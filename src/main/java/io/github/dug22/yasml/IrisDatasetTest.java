@@ -9,7 +9,7 @@ import io.github.dug22.yasml.metric.Accuracy;
 
 import java.util.List;
 
-public class DummyTest {
+public class IrisDatasetTest {
 
     public static void main(String[] args) {
         testKNN();
