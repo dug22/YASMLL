@@ -14,8 +14,8 @@ Yet Another Small Machine Learning Library (YASMLL)
 YASMLL is a simple lightweight Java-based machine learning library that enables developers to create and train their own custom classification models. 
 YASMLL integrates with Carpentry (a Java-based dataframe and visualization library) https://github.com/dug22/carpentry simplifying dataset loading,
 and the definition of input features and output labels. YASMLL provides developers with many common machine learning algorithms to utilize, including:
-- KNN Classifiers
-- Naive Bayes
+- KNN Classifiers ✅
+- Naive Bayes ✅
 - Decision Trees
 - Random Forest
 - Logistic Regression
