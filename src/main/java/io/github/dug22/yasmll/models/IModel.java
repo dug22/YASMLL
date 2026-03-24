@@ -8,13 +8,12 @@ import io.github.dug22.yasmll.metric.Precision;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public interface IModel<I, O> {
 
     Map<String, String> summaryMap();
 
-    IModel<I, O> fit(Dataset<I, O> dataset);
+    void train(Dataset<I, O> dataset);
 
     List<O> test(Dataset<I, O> dataset);
 

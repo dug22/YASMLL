@@ -24,9 +24,8 @@ public class KNNClassifier<I, O> implements IModel<I, O>, Serializable {
     }
 
     @Override
-    public KNNClassifier<I, O> fit(Dataset<I, O> trainingDataset) {
+    public void train(Dataset<I, O> trainingDataset) {
         this.trainingDataset = trainingDataset;
-        return this;
     }
 
     @Override

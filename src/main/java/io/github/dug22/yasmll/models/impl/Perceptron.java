@@ -55,7 +55,7 @@ public class Perceptron implements IModel<Double, Integer>, Serializable {
     }
 
     @Override
-    public Perceptron fit(Dataset<Double, Integer> dataset) {
+    public void train(Dataset<Double, Integer> dataset) {
         List<DataPoint<Double, Integer>> dataPoints = dataset.getDataPoints();
         int numberOfInputs = dataPoints.getFirst().input().size();
         weights = new double[numberOfInputs];
@@ -71,7 +71,6 @@ public class Perceptron implements IModel<Double, Integer>, Serializable {
                 bias += learningRate * error;
             }
         }
-        return this;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class NaiveBayes implements IModel<Double, Integer>, Serializable {
     }
 
     @Override
-    public NaiveBayes fit(Dataset<Double, Integer> dataset) {
+    public void train(Dataset<Double, Integer> dataset) {
         int numberOfInputs = dataset.getDataPoints().getFirst().input().size();
         Map<Integer, Integer> classCounts = new HashMap<>();
         Map<Integer, Map<Integer, Double>> inputSums = new HashMap<>();
@@ -55,9 +55,6 @@ public class NaiveBayes implements IModel<Double, Integer>, Serializable {
                 inputProbabilities.get(key).put(inputKey, sum / classCount);
             });
         });
-
-
-        return this;
     }
 
     @Override
