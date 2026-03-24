@@ -16,6 +16,7 @@ YASMLL integrates with Carpentry (a Java-based dataframe and visualization libra
 and the definition of input features and output labels. YASMLL provides developers with many common machine learning algorithms to utilize, including:
 - KNN Classifiers ✅
 - Naive Bayes ✅
+- Perceptron ✅
 - Decision Trees
 - Random Forest
 - Logistic Regression
