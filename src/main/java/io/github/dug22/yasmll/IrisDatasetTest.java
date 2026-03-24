@@ -2,10 +2,10 @@ package io.github.dug22.yasmll;
 
 import io.github.dug22.carpentry.DataFrame;
 import io.github.dug22.carpentry.column.impl.IntegerColumn;
-import io.github.dug22.yasmll.classifier.KNNClassifier;
-import io.github.dug22.yasmll.classifier.NaiveBayes;
+import io.github.dug22.yasmll.metric.MetricType;
+import io.github.dug22.yasmll.models.impl.KNNClassifier;
+import io.github.dug22.yasmll.models.impl.NaiveBayes;
 import io.github.dug22.yasmll.data.Dataset;
-import io.github.dug22.yasmll.metric.Accuracy;
 
 import java.util.List;
 
@@ -13,33 +13,18 @@ public class IrisDatasetTest {
 
     public static void main(String[] args) {
         testKNN();
-        testNaiveBayes();
     }
 
     private static void testKNN() {
-
-        Dataset<Double, String> fullDataset = new Dataset<Double, String>()
-                .createFromDataFrame("https://raw.githubusercontent.com/dug22/datasets/refs/heads/main/iris.csv")
-                .setInputColumns(new String[]{"SepalLength", "SepalWidth", "PetalLength", "PetalWidth"})
-                .setOutputColumn("Name")
+        var fullDataset = new Dataset<Double, String>()
+                .of("https://raw.githubusercontent.com/dug22/datasets/refs/heads/main/iris.csv")
+                .inputs("SepalLength", "SepalWidth", "PetalLength", "PetalWidth")
+                .output("Name")
                 .build();
-
-        List<Dataset<Double, String>> trainTestSplit = fullDataset.split(0.8);
-        Dataset<Double, String> trainingSet = trainTestSplit.get(0);
-        Dataset<Double, String> testSet = trainTestSplit.get(1);
-        KNNClassifier<Double, String> knn = new KNNClassifier<>(3);
-        knn.train(trainingSet);
-        List<String> predictions = knn.test(testSet);
-        Accuracy accuracyEvaluator = new Accuracy();
-        double score = accuracyEvaluator.evaluate(testSet.getDataPoints(), predictions);
-
-        System.out.println("--- KNN Classification Results ---");
-        System.out.printf("Total Test Samples: %d\n", testSet.getDataPoints().size());
-        System.out.printf("Model Accuracy: %.2f%%\n", score * 100);
-
-
-        String prediction = knn.predict(List.of(5.6, 3.8, 1.4, 0.2));
-        System.out.println(prediction);
+        var split = fullDataset.split(0.8);
+        var knn = new KNNClassifier<Double, String>(3).fit(split.trainingDataSet());
+        knn.evaluate(MetricType.ACCURACY, split.testDataset().getDataPoints(), knn.test(split.testDataset()));
+        knn.summary();
     }
 
     private static void testNaiveBayes() {
@@ -62,26 +47,16 @@ public class IrisDatasetTest {
 
         dataFrame.head();
 
-        Dataset<Double, Integer> fullDataset = new Dataset<Double, Integer>()
-                .createFromDataFrame(dataFrame)
-                .setInputColumns(new String[]{"SepalLength", "SepalWidth", "PetalLength", "PetalWidth"})
-                .setOutputColumn("ID")
+        var fullDataset = new Dataset<Double, Integer>()
+                .of(dataFrame)
+                .inputs(new String[]{"SepalLength", "SepalWidth", "PetalLength", "PetalWidth"})
+                .output("ID")
                 .build();
 
-        List<Dataset<Double, Integer>> trainTestSplit = fullDataset.split(0.8);
-        Dataset<Double, Integer> trainingSet = trainTestSplit.get(0);
-        Dataset<Double, Integer> testSet = trainTestSplit.get(1);
-        NaiveBayes naiveBayes = new NaiveBayes();
-        naiveBayes.train(trainingSet);
-        List<Integer> predictions = naiveBayes.test(testSet);
-        Accuracy accuracyEvaluator = new Accuracy();
-        double score = accuracyEvaluator.evaluate(testSet.getDataPoints(), predictions);
-
-        System.out.println("--- Naive Bayes Classification Results ---");
-        System.out.printf("Total Test Samples: %d\n", testSet.getDataPoints().size());
-        System.out.printf("Model Accuracy: %.2f%%\n", score * 100);
-
-
+        var split = fullDataset.split(0.8);
+        NaiveBayes naiveBayes = new NaiveBayes().fit(split.trainingDataSet());
+        naiveBayes.evaluate(MetricType.ACCURACY, split.testDataset().getDataPoints(), naiveBayes.test(split.testDataset()));
+        naiveBayes.summary();
         int prediction = naiveBayes.predict(List.of(5.6, 3.8, 1.4, 0.2));
         System.out.println(prediction);
     }

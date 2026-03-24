@@ -1,8 +1,10 @@
-package io.github.dug22.yasmll.classifier;
+package io.github.dug22.yasmll.models.impl;
 
 import io.github.dug22.yasmll.data.DataPoint;
 import io.github.dug22.yasmll.data.Dataset;
+import io.github.dug22.yasmll.models.IModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,19 +13,25 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
-public class NaiveBayes implements IClassifier<Double, Integer> {
+public class NaiveBayes implements IModel<Double, Integer>, Serializable {
 
-
+    private final Map<String, String> summaryMap;
     private final Map<Integer, Double> classProbabilities;
     private final Map<Integer, Map<Integer, Double>> inputProbabilities;
 
     public NaiveBayes() {
         classProbabilities = new HashMap<>();
         inputProbabilities = new HashMap<>();
+        this.summaryMap = new HashMap<>();
     }
 
     @Override
-    public void train(Dataset<Double, Integer> dataset) {
+    public Map<String, String> summaryMap() {
+        return summaryMap;
+    }
+
+    @Override
+    public NaiveBayes fit(Dataset<Double, Integer> dataset) {
         int numberOfInputs = dataset.getDataPoints().getFirst().input().size();
         Map<Integer, Integer> classCounts = new HashMap<>();
         Map<Integer, Map<Integer, Double>> inputSums = new HashMap<>();
@@ -38,7 +46,7 @@ public class NaiveBayes implements IClassifier<Double, Integer> {
         });
 
         int totalDataPoints = dataset.getDataPoints().size();
-        classCounts.forEach((key, value) ->  classProbabilities.put(key, (double) value / totalDataPoints));
+        classCounts.forEach((key, value) -> classProbabilities.put(key, (double) value / totalDataPoints));
         inputSums.forEach((key, value) -> {
             inputProbabilities.putIfAbsent(key, new HashMap<>());
             int classCount = classCounts.get(key);
@@ -47,15 +55,26 @@ public class NaiveBayes implements IClassifier<Double, Integer> {
                 inputProbabilities.get(key).put(inputKey, sum / classCount);
             });
         });
+
+
+        return this;
     }
 
     @Override
     public List<Integer> test(Dataset<Double, Integer> dataset) {
-        List<Integer> outputs = new ArrayList<>();
+        List<Integer> predictions = new ArrayList<>();
         for (DataPoint<Double, Integer> dataPoint : dataset.getDataPoints()) {
-            outputs.add(predict(dataPoint.input()));
+            predictions.add(predict(dataPoint.input()));
         }
-        return outputs;
+        summaryMap().put("Test Size", String.valueOf(predictions.size()));
+        return predictions;
+    }
+
+    @Override
+    public void summary() {
+        System.out.println("--- Naive Bayes Classification Results ---");
+        System.out.printf("Total Test Samples: %s\n", summaryMap().get("Test Size"));
+        System.out.printf("Model " + summaryMap().get("Metric") + " : %.2f%%\n", Double.parseDouble(summaryMap().get("Score")) * 100);
     }
 
     public Integer predict(List<Double> inputs) {

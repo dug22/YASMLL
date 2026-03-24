@@ -20,37 +20,37 @@ public class Dataset<I, O> implements Serializable {
         this.dataPoints = new ArrayList<>();
     }
 
-    public Dataset<I, O> createFromDataFrame(Column<?>... columns) {
+    public Dataset<I, O> of(Column<?>... columns) {
         this.dataFrame = DataFrame.create(columns);
         return this;
     }
 
-    public Dataset<I, O> createFromDataFrame(DataFrame dataFrame) {
+    public Dataset<I, O> of(DataFrame dataFrame) {
         this.dataFrame = dataFrame;
         return this;
     }
 
-    public Dataset<I, O> createFromDataFrame(File file) {
+    public Dataset<I, O> of(File file) {
         dataFrame = DataFrame.read().csv(file);
         return this;
     }
 
-    public Dataset<I, O> createFromDataFrame(String url) {
+    public Dataset<I, O> of(String url) {
         dataFrame = DataFrame.read().csv(url);
         return this;
     }
 
-    public Dataset<I, O> createFromDataFrame(CsvReadingProperties properties) {
+    public Dataset<I, O> of(CsvReadingProperties properties) {
         dataFrame = DataFrame.read().csv(properties);
         return this;
     }
 
-    public Dataset<I, O> setInputColumns(String... inputColumns) {
+    public Dataset<I, O> inputs(String... inputColumns) {
         this.inputColumns = inputColumns;
         return this;
     }
 
-    public Dataset<I, O> setOutputColumn(String outputColumn) {
+    public Dataset<I, O> output(String outputColumn) {
         this.outputColumn = outputColumn;
         return this;
     }
@@ -85,7 +85,7 @@ public class Dataset<I, O> implements Serializable {
         return dataPoints;
     }
 
-    public List<Dataset<I, O>> split(double ratio) {
+    public TrainTestSplitResult<I, O> split(double ratio) {
         return new TrainTestSplit().split(this, ratio);
     }
 }

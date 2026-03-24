@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TrainTestSplit {
 
-    public <I, O> List<Dataset<I, O>> split(Dataset<I, O> dataset, double ratio) {
+    public <I, O> TrainTestSplitResult<I, O> split(Dataset<I, O> dataset, double ratio) {
         List<DataPoint<I, O>> dataPoints = dataset.getDataPoints();
         Collections.shuffle(dataPoints);
         int trainSize = (int) (dataset.getDataPoints().size() * ratio);
@@ -14,6 +14,8 @@ public class TrainTestSplit {
         trainDataset.dataPoints = new ArrayList<>(dataPoints.subList(0, trainSize));
         Dataset<I, O> testDataset = new Dataset<>();
         testDataset.dataPoints = new ArrayList<>(dataPoints.subList(trainSize, dataPoints.size()));
-        return List.of(trainDataset, testDataset);
+        return new TrainTestSplitResult<>(trainDataset, testDataset);
     }
+
+
 }

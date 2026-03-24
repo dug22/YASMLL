@@ -1,6 +1,6 @@
 package io.github.dug22.yasmll;
 
-import io.github.dug22.yasmll.classifier.IClassifier;
+import io.github.dug22.yasmll.models.IModel;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,7 +28,7 @@ public class ModelManager {
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             Object obj = ois.readObject();
-            if (!(obj instanceof IClassifier)) {
+            if (!(obj instanceof IModel)) {
                 throw new IllegalArgumentException("Invalid File!");
             }
             return obj;

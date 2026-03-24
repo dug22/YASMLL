@@ -1,29 +1,39 @@
-package io.github.dug22.yasmll.classifier;
+package io.github.dug22.yasmll.models.impl;
 
 import io.github.dug22.yasmll.data.DataPoint;
 import io.github.dug22.yasmll.data.Dataset;
+import io.github.dug22.yasmll.models.IModel;
 
 import java.io.Serializable;
 import java.util.*;
 
-public class KNNClassifier<I, O> implements IClassifier<I, O>, Serializable {
+public class KNNClassifier<I, O> implements IModel<I, O>, Serializable {
 
+    private final Map<String, String> summaryMap;
     private Dataset<I, O> trainingDataset;
     private final int k;
 
-    public KNNClassifier(int k) {
+    public KNNClassifier (int k) {
         this.k = k;
+        this.summaryMap = new HashMap<>();
     }
 
     @Override
-    public void train(Dataset<I, O> trainingDataset) {
+    public Map<String, String> summaryMap() {
+        return summaryMap;
+    }
+
+    @Override
+    public KNNClassifier<I, O> fit(Dataset<I, O> trainingDataset) {
         this.trainingDataset = trainingDataset;
+        return this;
     }
 
     @Override
     public List<O> test(Dataset<I, O> dataset) {
         List<O> predictions = new ArrayList<>();
         dataset.getDataPoints().forEach(dataPoint -> predictions.add(predict(dataPoint)));
+        summaryMap().put("Test Size", String.valueOf(predictions.size()));
         return predictions;
     }
 
@@ -55,6 +65,12 @@ public class KNNClassifier<I, O> implements IClassifier<I, O>, Serializable {
         return maxEntry.getKey();
     }
 
+    public void summary(){
+        System.out.println("--- KNN Classification Results ---");
+        System.out.printf("Total Test Samples: %s\n", summaryMap().get("Test Size"));
+        System.out.printf("Model " +  summaryMap().get("Metric") + " : %.2f%%\n", Double.parseDouble(summaryMap().get("Score")) * 100);
+    }
+
     private double calculateEuclideanDistance(List<I> inputA, List<I> inputB) {
         double sum = 0.0;
         int index = 0;
@@ -70,4 +86,5 @@ public class KNNClassifier<I, O> implements IClassifier<I, O>, Serializable {
 
     private record Neighbor<O>(O output, double distance) {
     }
+
 }
