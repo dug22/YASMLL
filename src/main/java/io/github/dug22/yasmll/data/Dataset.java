@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Dataset<I, O> implements Serializable {
 
@@ -50,6 +51,7 @@ public class Dataset<I, O> implements Serializable {
         return this;
     }
 
+
     public Dataset<I, O> output(String outputColumn) {
         this.outputColumn = outputColumn;
         return this;
@@ -87,5 +89,9 @@ public class Dataset<I, O> implements Serializable {
 
     public TrainTestSplitResult<I, O> split(double ratio) {
         return new TrainTestSplit().split(this, ratio);
+    }
+
+    public TrainTestSplitResult<I, O> split(double ratio, int seed) {
+        return new TrainTestSplit().split(this, ratio, seed);
     }
 }

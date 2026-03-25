@@ -3,6 +3,7 @@ package io.github.dug22.yasmll;
 import io.github.dug22.carpentry.DataFrame;
 import io.github.dug22.carpentry.column.impl.IntegerColumn;
 import io.github.dug22.yasmll.data.TrainTestSplitResult;
+import io.github.dug22.yasmll.datasets.types.Iris;
 import io.github.dug22.yasmll.metric.MetricType;
 import io.github.dug22.yasmll.models.impl.KNNClassifier;
 import io.github.dug22.yasmll.models.impl.NaiveBayes;
@@ -29,11 +30,9 @@ public class IrisDatasetTest {
     }
 
     private static void testKNN() {
-        Dataset<Double, String> fullDataset = new Dataset<Double, String>()
-                .of("https://raw.githubusercontent.com/dug22/datasets/refs/heads/main/iris.csv")
-                .inputs("SepalLength", "SepalWidth", "PetalLength", "PetalWidth")
-                .output("Name")
-                .build();
+        Iris<Double, String> irisDataset = Iris.loadDataset();
+        irisDataset.setInputs("SepalLength", "SepalWidth", "PetalLength", "PetalWidth").setOutput("Name").build();
+        Dataset<Double, String> fullDataset = irisDataset.getDataset();
         TrainTestSplitResult<Double, String> split = fullDataset.split(0.8);
         KNNClassifier<Double, String> knn = new KNNClassifier<>(3);
         Dataset<Double, String> trainingDataset = split.trainingDataSet();
