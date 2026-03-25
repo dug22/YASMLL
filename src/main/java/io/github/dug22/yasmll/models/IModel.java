@@ -17,7 +17,7 @@ public interface IModel<I, O> {
 
     List<O> test(Dataset<I, O> dataset);
 
-    default double evaluate(MetricType type, List<DataPoint<I, O>> dataPoints, List<O> predictions) {
+    default void evaluate(MetricType type, List<DataPoint<I, O>> dataPoints, List<O> predictions) {
         double score;
         if (type == MetricType.ACCURACY) {
             Accuracy accuracy = new Accuracy();
@@ -31,7 +31,6 @@ public interface IModel<I, O> {
 
         summaryMap().put("Metric", type.toString());
         summaryMap().put("Score", String.valueOf(score));
-        return score;
     }
 
     void summary();

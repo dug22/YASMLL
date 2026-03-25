@@ -2,6 +2,8 @@ package io.github.dug22.yasmll.models.impl;
 
 import io.github.dug22.yasmll.data.DataPoint;
 import io.github.dug22.yasmll.data.Dataset;
+import io.github.dug22.yasmll.metric.Metric;
+import io.github.dug22.yasmll.metric.MetricType;
 import io.github.dug22.yasmll.models.IModel;
 
 import java.io.Serializable;
@@ -63,20 +65,20 @@ public class Perceptron implements IModel<Double, Integer>, Serializable {
             for (DataPoint<Double, Integer> dataPoint : dataPoints) {
                 List<Double> input = dataPoint.input();
                 int output = dataPoint.output();
-                double prediction = predict(input);
-                double error = output - prediction;
-                for (int j = 0; j < weights.length; j++) {
-                    weights[j] += learningRate * error * input.get(j);
+                double prediction = predictRaw(input);
+                if (output * prediction <= threshold) {
+                    for (int j = 0; j < weights.length; j++) {
+                        weights[j] += learningRate * output * input.get(j);
+                    }
+                    bias += learningRate * output;
                 }
-                bias += learningRate * error;
             }
         }
     }
 
     @Override
     public List<Integer> test(Dataset<Double, Integer> dataset) {
-        List<Integer> predictions = new ArrayList<>();
-        dataset.getDataPoints().forEach(dataPoints -> predictions.add(predict(dataPoints.input())));
+        List<Integer> predictions = dataset.getDataPoints().stream().map(dataPoint -> predict(dataPoint.input())).toList();
         summaryMap().put("Test Size", String.valueOf(predictions.size()));
         return predictions;
     }
@@ -85,21 +87,25 @@ public class Perceptron implements IModel<Double, Integer>, Serializable {
     public void summary() {
         System.out.println("--- Perceptron Results ---");
         System.out.printf("Total Test Samples: %s\n", summaryMap().get("Test Size"));
-        System.out.printf("Model " +  summaryMap().get("Metric") + " : %.2f%%\n", Double.parseDouble(summaryMap().get("Score")) * 100);
+
+        if (!(summaryMap.get("Metric").endsWith(MetricType.MAE.toString()))) {
+            System.out.printf("Model " + summaryMap().get("Metric") + " : %.2f%%\n", Double.parseDouble(summaryMap().get("Score")) * 100);
+        } else {
+            System.out.printf("Model " + summaryMap().get("Metric") + " : %.2f\n", Double.parseDouble(summaryMap().get("Score")));
+        }
     }
 
 
-    public int predict(List<Double> inputs) {
+    private double predictRaw(List<Double> inputs) {
         double sum = bias;
         for (int i = 0; i < weights.length; i++) {
             sum += weights[i] * inputs.get(i);
         }
-
-        return step(sum);
+        return sum;
     }
 
-    private int step(double value) {
-        return value > threshold ? 1 : 0;
+    public int predict(List<Double> input) {
+        return predictRaw(input) >= threshold ? 1 : 0;
     }
 
     public double[] getWeights() {
